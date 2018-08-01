@@ -1,5 +1,6 @@
 const nameInput = document.getElementById('name');
 const selectJobRole = document.getElementById('title');
+const emailInput = document.getElementById('mail');
 const otherTitleInput = document.getElementById('other-title');
 const shirtDesign = document.getElementById('design');
 const shirtColor = document.getElementById('color');
@@ -11,6 +12,10 @@ const registerButton3 = document.querySelectorAll('#registration label input')[3
 const registerButton4 = document.querySelectorAll('#registration label input')[4];
 const registerButton5 = document.querySelectorAll('#registration label input')[5];
 const registerButton6 = document.querySelectorAll('#registration label input')[6];
+const checkbox = document.querySelectorAll('#registration legend')[0];
+const nameLabel = document.querySelectorAll('fieldset label')[0];
+const emailLabel = document.querySelectorAll('fieldset label')[1];
+const cardNumber = document.getElementsByClassName('col-6 col')[0];
 const paypal = document.querySelectorAll('div p')[0];
 const bitcoin = document.querySelectorAll('div p')[1];
 const creditCard = document.getElementById('credit-card');
@@ -18,7 +23,13 @@ const activities = document.getElementById('registration');
 const totalLabel = document.createElement('label');
 const paymentType = document.getElementById('payment');
 const selectPayment = document.querySelectorAll('#payment option')[0];
+const button = document.getElementsByTagName('button')[0];
+const ccNumber = document.getElementById('cc-num');
+const zipNumber = document.getElementById('zip');
+const cvvNumber = document.getElementById('cvv');
+const fieldSet = document.getElementsByTagName('fieldset')[0];
 var value = 0;
+
 
 //Dynamically appends "Total:" label to page
 function appendTotal (){
@@ -27,7 +38,7 @@ function appendTotal (){
 
 //Adds text and value to "Total:" label
 function calcTotal (){
-  totalLabel.innerHTML = 'Total: ' + value;
+  totalLabel.innerHTML = 'Total: $' + value;
 }
 
 //Dynamically adds attributes and to page
@@ -223,7 +234,75 @@ const payment = function (){
   }
 }
 
+//Appends error messages if none are present
+function error(parent, defaultSiblings, trueFalse) {
+  if (parent.children.length == defaultSiblings){
+    let error = document.createElement('h5');
+    error.innerHTML = "*Required";
+    error.setAttribute('class', 'error');
+    parent.appendChild(error);
+    if (trueFalse){
+      error.innerHTML = "*Must select at least one event";
+    }
+  }
+}
+
+//Removes error message if present
+function removeError(parent, defaultSiblings) {
+  if (parent.children.length == defaultSiblings){
+    let error = parent.getElementsByTagName('h5')[0];
+    parent.removeChild(error);
+  }
+}
+
 paymentType.addEventListener('change', payment);
+
+//Controls error messages for name, email, activities
+function errorMessages (buttonFunction, ifStatement, errorPar, errorDefSib, trueFalse){
+  if (ifStatement){
+    buttonFunction.preventDefault();
+      if (trueFalse){
+        error(errorPar, errorDefSib, true);
+      } else {
+        error(errorPar, errorDefSib);
+      }
+  } else {removeError(errorPar, (errorDefSib + 1))}
+}
+
+
+//Adds error border for CC, zip, and CVV
+function errorBorder (buttonFunction, payment, input, firstArg, secondArg){
+  if (payment.style.display !== 'none'
+      && (isNaN(input.value.replace(/ +/g, '')) == true
+      ||  firstArg
+      ||  secondArg)) {
+        buttonFunction.preventDefault();
+        input.style.borderColor = 'red';
+  } else {input.style.borderColor = '';}
+}
+
+//Checks to see if input fields are input incorrectly
+button.addEventListener('click', (e) => {
+  let less13 = ccNumber.value.replace(/ +/g, '').length < 13;
+  let great16 = ccNumber.value.replace(/ +/g, '').length > 16;
+  let not5 = zipNumber.value.replace(/ +/g, '').length !==5;
+  let not3 = cvvNumber.value.replace(/ +/g, '').length !==3;
+  let nameIf = nameInput.value == false;
+  let emailIf = emailInput.value.includes('@') == false || emailInput.value.includes('.') == false;
+  let regButtonIf = registerButton0.checked == false
+      && registerButton1.checked == false
+      && registerButton2.checked == false
+      && registerButton3.checked == false
+      && registerButton4.checked == false
+      && registerButton5.checked == false
+      && registerButton6.checked == false;
+  errorMessages(e, nameIf, nameLabel, 0);
+  errorMessages(e, emailIf, emailLabel, 0);
+  errorMessages(e, regButtonIf, checkbox, 0, true)
+  errorBorder(e, creditCard, ccNumber, less13, great16);
+  errorBorder(e, creditCard, zipNumber, not5);
+  errorBorder(e, creditCard, cvvNumber, not3);
+});
 
 //Called functions on pageload
 appendTotal();
