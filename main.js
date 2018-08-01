@@ -2,16 +2,11 @@ const nameInput = document.getElementById('name');
 const selectJobRole = document.getElementById('title');
 const emailInput = document.getElementById('mail');
 const otherTitleInput = document.getElementById('other-title');
+const colorSelect = document.getElementById('colors-js-puns');
 const shirtDesign = document.getElementById('design');
 const shirtColor = document.getElementById('color');
 const designAll = document.querySelectorAll('#color option');
-const registerButton0 = document.querySelectorAll('#registration label input')[0];
-const registerButton1 = document.querySelectorAll('#registration label input')[1];
-const registerButton2 = document.querySelectorAll('#registration label input')[2];
-const registerButton3 = document.querySelectorAll('#registration label input')[3];
-const registerButton4 = document.querySelectorAll('#registration label input')[4];
-const registerButton5 = document.querySelectorAll('#registration label input')[5];
-const registerButton6 = document.querySelectorAll('#registration label input')[6];
+const registerButton = document.querySelectorAll('#registration label input');
 const checkbox = document.querySelectorAll('#registration legend')[0];
 const nameLabel = document.querySelectorAll('fieldset label')[0];
 const emailLabel = document.querySelectorAll('fieldset label')[1];
@@ -30,6 +25,10 @@ const cvvNumber = document.getElementById('cvv');
 const fieldSet = document.getElementsByTagName('fieldset')[0];
 var value = 0;
 
+//Hides color option on page load
+function hideColor (){
+  colorSelect.style.display = 'none';
+};
 
 //Dynamically appends "Total:" label to page
 function appendTotal (){
@@ -66,7 +65,9 @@ const showOther = function () {
   }
 };
 
+
 //Displays appropriate amount of color options depending on t-shrit design selected
+//Shows color label and menu only if design is selected
 const showColorOptions = function (){
   const designPuns = document.querySelectorAll('.puns');
   const designLove = document.querySelectorAll('.love');
@@ -90,121 +91,76 @@ const showColorOptions = function (){
     shirtColor.selectedIndex = 3;
   }
   if (clickedDesign.innerHTML == "Select Theme"){
-    for (i = 0; i < designLove.length; i += 1) {
-      designLove[i].style.display = 'block';
-    }
-    for (i = 0; i < designPuns.length; i += 1) {
-      designPuns[i].style.display = 'block';
-    }
+      colorSelect.style.display = 'none';
+  } else {
+      colorSelect.style.display = 'block';
   }
 };
 
-
+//Event listener for Job Role Dropdown
 selectJobRole.addEventListener('change', showOther);
 
+//Event listener for shirt design drop down
 shirtDesign.addEventListener('change', showColorOptions);
 
-registerButton0.addEventListener('change', (e) => {
-  let isChecked = e.target.checked;
+
+//Checks if input 0 is checked, adjusts costs
+function isChecked0 (buttonFunction, valueAdjust){
+  let isChecked = buttonFunction.target.checked;
   if(isChecked) {
-    value += 200
+    value += valueAdjust
     calcTotal();
   } else {
-    value -= 200
+    value -= valueAdjust
     calcTotal();
-    }
-});
+      }
+}
+
+//Checks if inputs 1-6 are checked, adjusts costs
+function isChecked (buttonFunction, valueAdjust, bNum1, bNum2){
+  let isChecked = buttonFunction.target.checked;
+  if(isChecked) {
+    registerButton[bNum1].disabled = true;
+    registerButton[bNum2].disabled = true;
+    value += valueAdjust
+    calcTotal();
+  } else {
+    registerButton[bNum1].disabled = false;
+    registerButton[bNum2].disabled = false;
+    value -= valueAdjust
+    calcTotal();
+      }
+}
 
 //Registration buttons disable other options when checked, able when unchecked.  Also, add/subtract from total costs
-registerButton1.addEventListener('change', (e) => {
-  let isChecked = e.target.checked;
-  if(isChecked) {
-    registerButton3.disabled = true;
-    registerButton5.disabled = true;
-    value += 100
-    calcTotal();
-  } else {
-    registerButton3.disabled = false;
-    registerButton5.disabled = false;
-    value -= 100
-    calcTotal();
-      }
+registerButton[0].addEventListener('change', (e) =>{
+  isChecked0(e, 200,);
 });
 
-registerButton2.addEventListener('change', (e) => {
-  let isChecked = e.target.checked;
-  if(isChecked) {
-    registerButton4.disabled = true;
-    registerButton6.disabled = true;
-    value += 100
-    calcTotal();
-  } else {
-    registerButton4.disabled = false;
-    registerButton6.disabled = false;
-    value -= 100
-    calcTotal();
-      }
+registerButton[1].addEventListener('change', (e) =>{
+  isChecked(e, 100, 3, 5);
 });
 
-registerButton3.addEventListener('change', (e) => {
-  let isChecked = e.target.checked;
-  if(isChecked) {
-    registerButton1.disabled = true;
-    registerButton5.disabled = true;
-    value += 100
-    calcTotal();
-  } else {
-    registerButton1.disabled = false;
-    registerButton5.disabled = false;
-    value -= 100
-    calcTotal();
-      }
+registerButton[2].addEventListener('change', (e) =>{
+  isChecked(e, 100, 4, 6);
 });
 
-registerButton4.addEventListener('change', (e) => {
-  let isChecked = e.target.checked;
-  if(isChecked) {
-    registerButton2.disabled = true;
-    registerButton6.disabled = true;
-    value += 100
-    calcTotal();
-  } else {
-    registerButton2.disabled = false;
-    registerButton6.disabled = false;
-    value -= 100
-    calcTotal();
-      }
+registerButton[3].addEventListener('change', (e) =>{
+  isChecked(e, 100, 1, 5);
 });
 
-registerButton5.addEventListener('change', (e) => {
-  let isChecked = e.target.checked;
-  if(isChecked) {
-    registerButton1.disabled = true;
-    registerButton3.disabled = true;
-    value += 100
-    calcTotal();
-  } else {
-    registerButton1.disabled = false;
-    registerButton3.disabled = false;
-    value -= 100
-    calcTotal();
-      }
+registerButton[4].addEventListener('change', (e) =>{
+  isChecked(e, 100, 2, 6);
 });
 
-registerButton6.addEventListener('change', (e) => {
-  let isChecked = e.target.checked;
-  if(isChecked) {
-    registerButton2.disabled = true;
-    registerButton4.disabled = true;
-    value += 100
-    calcTotal();
-  } else {
-    registerButton2.disabled = false;
-    registerButton4.disabled = false;
-    value -= 100
-    calcTotal();
-      }
+registerButton[5].addEventListener('change', (e) =>{
+  isChecked(e, 100, 1, 3);
 });
+
+registerButton[6].addEventListener('change', (e) =>{
+  isChecked(e, 100, 2, 4);
+});
+
 
 //Makes creditcard default payment displayed
 function defaultPayment (index){
@@ -247,6 +203,16 @@ function error(parent, defaultSiblings, trueFalse) {
   }
 }
 
+//Adds unique message if space character isn't included in name
+function error2(parent, defaultSiblings, trueFalse) {
+  if (parent.children.length == defaultSiblings){
+    let error = document.createElement('h5');
+    error.innerHTML = "*Please enter first and last name";
+    error.setAttribute('class', 'error');
+    parent.appendChild(error);
+  }
+}
+
 //Removes error message if present
 function removeError(parent, defaultSiblings) {
   if (parent.children.length == defaultSiblings){
@@ -255,6 +221,7 @@ function removeError(parent, defaultSiblings) {
   }
 }
 
+//Event listener for payment type drop down
 paymentType.addEventListener('change', payment);
 
 //Controls error messages for name, email, activities
@@ -265,6 +232,18 @@ function errorMessages (buttonFunction, ifStatement, errorPar, errorDefSib, true
         error(errorPar, errorDefSib, true);
       } else {
         error(errorPar, errorDefSib);
+      }
+  } else {removeError(errorPar, (errorDefSib + 1))}
+}
+
+//Controls error messages for name (first and last)
+function errorMessages2 (buttonFunction, ifStatement, errorPar, errorDefSib, trueFalse){
+  if (ifStatement){
+    buttonFunction.preventDefault();
+      if (trueFalse){
+        error2(errorPar, errorDefSib, true);
+      } else {
+        error2(errorPar, errorDefSib);
       }
   } else {removeError(errorPar, (errorDefSib + 1))}
 }
@@ -281,22 +260,37 @@ function errorBorder (buttonFunction, payment, input, firstArg, secondArg){
   } else {input.style.borderColor = '';}
 }
 
-//Checks to see if input fields are input incorrectly
+//Checks to see if credit card number is input corectly and provides live feedback
+ccNumber.addEventListener('keyup', (e) => {
+  let less13 = ccNumber.value.replace(/ +/g, '').length < 13;
+  let great16 = ccNumber.value.replace(/ +/g, '').length > 16;
+  errorBorder(e, creditCard, ccNumber, less13, great16);
+});
+
+//Checks to see if zip number is input corectly and provides live feedback
+zipNumber.addEventListener('keyup', (e) => {
+  let not5 = zipNumber.value.replace(/ +/g, '').length !==5;
+  errorBorder(e, creditCard, zipNumber, not5);
+});
+
+//Checks to see if zip number is input corectly and provides live feedback
+cvvNumber.addEventListener('keyup', (e) => {
+  let not3 = cvvNumber.value.replace(/ +/g, '').length !==3;
+  errorBorder(e, creditCard, cvvNumber, not3);
+});
+
+//Checks to see if name, email, and registration input fields are input incorrectly
 button.addEventListener('click', (e) => {
   let less13 = ccNumber.value.replace(/ +/g, '').length < 13;
   let great16 = ccNumber.value.replace(/ +/g, '').length > 16;
   let not5 = zipNumber.value.replace(/ +/g, '').length !==5;
   let not3 = cvvNumber.value.replace(/ +/g, '').length !==3;
   let nameIf = nameInput.value == false;
+  let noSpace = nameInput.value !== false && nameInput.value.includes(' ') == false;
   let emailIf = emailInput.value.includes('@') == false || emailInput.value.includes('.') == false;
-  let regButtonIf = registerButton0.checked == false
-      && registerButton1.checked == false
-      && registerButton2.checked == false
-      && registerButton3.checked == false
-      && registerButton4.checked == false
-      && registerButton5.checked == false
-      && registerButton6.checked == false;
+  let regButtonIf = document.querySelectorAll('input:checked').length === 0;
   errorMessages(e, nameIf, nameLabel, 0);
+  errorMessages2(e, noSpace, nameLabel, 0);
   errorMessages(e, emailIf, emailLabel, 0);
   errorMessages(e, regButtonIf, checkbox, 0, true)
   errorBorder(e, creditCard, ccNumber, less13, great16);
@@ -305,6 +299,7 @@ button.addEventListener('click', (e) => {
 });
 
 //Called functions on pageload
+hideColor();
 appendTotal();
 calcTotal();
 addAttributes();
