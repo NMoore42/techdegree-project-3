@@ -23,6 +23,7 @@ const ccNumber = document.getElementById('cc-num');
 const zipNumber = document.getElementById('zip');
 const cvvNumber = document.getElementById('cvv');
 const fieldSet = document.getElementsByTagName('fieldset')[0];
+const paymentArray = ["credit card", "paypal", "bitcoin"];
 var value = 0;
 
 //Hides color option on page load
@@ -180,25 +181,23 @@ function defaultPayment (index){
   selectPayment.disabled = true;
 }
 
-//Shows/hides payment info depending on option selected
-const payment = function (){
+//Displays correct payment info depending on which selection is made
+function payment (input1, input2, input3, input4){
   let clickedPayment = paymentType.options[paymentType.selectedIndex];
-  if (clickedPayment.value == 'credit card'){
-    creditCard.style.display = 'block';
-    bitcoin.style.display = 'none';
-    paypal.style.display = 'none';
-  }
-  if (clickedPayment.value == 'paypal'){
-    creditCard.style.display = 'none';
-    bitcoin.style.display = 'none';
-    paypal.style.display = 'block';
-  }
-  if (clickedPayment.value == 'bitcoin'){
-    creditCard.style.display = 'none';
-    bitcoin.style.display = 'block';
-    paypal.style.display = 'none';
+  if (clickedPayment.value == input1){
+    input2.style.display = 'block';
+    input3.style.display = 'none';
+    input4.style.display = 'none';
   }
 }
+
+//Event listener for payment type drop down
+paymentType.addEventListener('change', (e) => {
+  payment (paymentArray[0], creditCard, bitcoin, paypal);
+  payment (paymentArray[1], paypal, creditCard, bitcoin);
+  payment (paymentArray[2], bitcoin, paypal, creditCard);
+
+});
 
 //Appends error messages if none are present
 function error(parent, defaultSiblings, trueFalse) {
@@ -230,9 +229,6 @@ function removeError(parent, defaultSiblings) {
     parent.removeChild(error);
   }
 }
-
-//Event listener for payment type drop down
-paymentType.addEventListener('change', payment);
 
 //Controls error messages for name, email, activities
 function errorMessages (buttonFunction, ifStatement, errorPar, errorDefSib, trueFalse){
