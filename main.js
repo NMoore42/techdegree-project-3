@@ -116,17 +116,27 @@ function isChecked0 (buttonFunction, valueAdjust){
       }
 }
 
-//Checks if inputs 1-6 are checked, adjusts costs
-function isChecked (buttonFunction, valueAdjust, bNum1, bNum2){
+//Checks if inputs 1-4 are checked, adjusts costs
+function isChecked (buttonFunction, valueAdjust, bNum1){
   let isChecked = buttonFunction.target.checked;
   if(isChecked) {
     registerButton[bNum1].disabled = true;
-    registerButton[bNum2].disabled = true;
     value += valueAdjust
     calcTotal();
   } else {
     registerButton[bNum1].disabled = false;
-    registerButton[bNum2].disabled = false;
+    value -= valueAdjust
+    calcTotal();
+      }
+}
+
+//Checks if inputs 5 nad 6 are checked, adjusts costs
+function isChecked2 (buttonFunction, valueAdjust){
+  let isChecked = buttonFunction.target.checked;
+  if(isChecked) {
+    value += valueAdjust
+    calcTotal();
+  } else {
     value -= valueAdjust
     calcTotal();
       }
@@ -138,27 +148,27 @@ registerButton[0].addEventListener('change', (e) =>{
 });
 
 registerButton[1].addEventListener('change', (e) =>{
-  isChecked(e, 100, 3, 5);
+  isChecked(e, 100, 3);
 });
 
 registerButton[2].addEventListener('change', (e) =>{
-  isChecked(e, 100, 4, 6);
+  isChecked(e, 100, 4);
 });
 
 registerButton[3].addEventListener('change', (e) =>{
-  isChecked(e, 100, 1, 5);
+  isChecked(e, 100, 1);
 });
 
 registerButton[4].addEventListener('change', (e) =>{
-  isChecked(e, 100, 2, 6);
+  isChecked(e, 100, 2);
 });
 
 registerButton[5].addEventListener('change', (e) =>{
-  isChecked(e, 100, 1, 3);
+  isChecked2(e, 100);
 });
 
 registerButton[6].addEventListener('change', (e) =>{
-  isChecked(e, 100, 2, 4);
+  isChecked2(e, 100);
 });
 
 
