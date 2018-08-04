@@ -24,6 +24,7 @@ const zipNumber = document.getElementById('zip');
 const cvvNumber = document.getElementById('cvv');
 const fieldSet = document.getElementsByTagName('fieldset')[0];
 const paymentArray = ["credit card", "paypal", "bitcoin"];
+const errors = ["Name required", "Please enter first and last name", "Must select at least one event", "Must be valid email format"];
 var value = 0;
 
 //Hides color option on page load
@@ -172,7 +173,6 @@ registerButton[6].addEventListener('change', (e) =>{
   isChecked2(e, 100);
 });
 
-
 //Makes creditcard default payment displayed
 function defaultPayment (index){
   paymentType.selectedIndex = index
@@ -200,23 +200,10 @@ paymentType.addEventListener('change', (e) => {
 });
 
 //Appends error messages if none are present
-function error(parent, defaultSiblings, trueFalse) {
+function error(parent, defaultSiblings, errorText) {
   if (parent.children.length == defaultSiblings){
     let error = document.createElement('h5');
-    error.innerHTML = "*Required";
-    error.setAttribute('class', 'error');
-    parent.appendChild(error);
-    if (trueFalse){
-      error.innerHTML = "*Must select at least one event";
-    }
-  }
-}
-
-//Adds unique message if space character isn't included in name
-function error2(parent, defaultSiblings, trueFalse) {
-  if (parent.children.length == defaultSiblings){
-    let error = document.createElement('h5');
-    error.innerHTML = "*Please enter first and last name";
+    error.innerHTML = errorText;
     error.setAttribute('class', 'error');
     parent.appendChild(error);
   }
@@ -231,29 +218,12 @@ function removeError(parent, defaultSiblings) {
 }
 
 //Controls error messages for name, email, activities
-function errorMessages (buttonFunction, ifStatement, errorPar, errorDefSib, trueFalse){
+function errorMessages (buttonFunction, ifStatement, errorPar, errorDefSib, errorText){
   if (ifStatement){
     buttonFunction.preventDefault();
-      if (trueFalse){
-        error(errorPar, errorDefSib, true);
-      } else {
-        error(errorPar, errorDefSib);
-      }
-  } else {removeError(errorPar, (errorDefSib + 1))}
+        error(errorPar, errorDefSib, errorText);
+      } else {removeError(errorPar, (errorDefSib + 1))}
 }
-
-//Controls error messages for name (first and last)
-function errorMessages2 (buttonFunction, ifStatement, errorPar, errorDefSib, trueFalse){
-  if (ifStatement){
-    buttonFunction.preventDefault();
-      if (trueFalse){
-        error2(errorPar, errorDefSib, true);
-      } else {
-        error2(errorPar, errorDefSib);
-      }
-  } else {removeError(errorPar, (errorDefSib + 1))}
-}
-
 
 //Adds error border for CC, zip, and CVV
 function errorBorder (buttonFunction, payment, input, firstArg, secondArg){
@@ -295,13 +265,19 @@ button.addEventListener('click', (e) => {
   let noSpace = nameInput.value !== false && nameInput.value.includes(' ') == false;
   let emailIf = emailInput.value.includes('@') == false || emailInput.value.includes('.') == false;
   let regButtonIf = document.querySelectorAll('input:checked').length === 0;
-  errorMessages(e, nameIf, nameLabel, 0);
-  errorMessages2(e, noSpace, nameLabel, 0);
-  errorMessages(e, emailIf, emailLabel, 0);
-  errorMessages(e, regButtonIf, checkbox, 0, true)
+  errorMessages(e, nameIf, nameLabel, 0, errors[0]);
+  errorMessages(e, emailIf, emailLabel, 0, errors[3]);
+  errorMessages(e, regButtonIf, checkbox, 0, errors[2])
+  errorMessages(e, noSpace, nameLabel, 0, errors[1]);
   errorBorder(e, creditCard, ccNumber, less13, great16);
   errorBorder(e, creditCard, zipNumber, not5);
   errorBorder(e, creditCard, cvvNumber, not3);
+});
+
+//Provides realtime error message on email input
+emailInput.addEventListener('keyup', (e)=>{
+  let emailIf = emailInput.value.includes('@') == false || emailInput.value.includes('.') == false;
+  errorMessages(e, emailIf, emailLabel, 0, errors[3]);
 });
 
 //Called functions on pageload
